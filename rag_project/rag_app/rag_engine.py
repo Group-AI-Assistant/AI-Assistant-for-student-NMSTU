@@ -73,3 +73,20 @@ def rag_query(question: str) -> str:
     user_prompt = f"Контекст:\n{context}\n\nВопрос: {question}\nОтвет:"
     full_prompt = f"{system_prompt}\n\n{user_prompt}"
     return generate_answer(full_prompt)
+
+def add_chunks_to_index(new_chunks: list):
+    """Добавляет новые чанки в существующий FAISS индекс и сохраняет обновлённый индекс."""
+    index, old_chunks = load_index()
+    if index is None:
+        # Если индекса ещё нет — создаём новый
+        build_index_from_documents(new_chunks)
+        return
+
+    # Векторизуем новые чанки
+    new_vectors = embed_batch(new_chunks)
+    # Добавляем в существующий индекс
+    index.add(new_vectors)
+    # Обновляем список всех чанков
+    all_chunks = old_chunks + new_chunks
+    # Сохраняем
+    save_index(index, all_chunks)

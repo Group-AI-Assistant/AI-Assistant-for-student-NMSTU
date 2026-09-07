@@ -1,0 +1,58 @@
+<!-- rag_app/templates/rag_app/upload.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка документа</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        input[type="file"] { display: block; margin-bottom: 10px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #status { margin-top: 20px; padding: 10px; border: 1px solid #ccc; display: none; }
+        .success { border-color: green; background: #d4edda; }
+        .error { border-color: red; background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>📤 Загрузить учебный материал</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file-input">Выберите файл .txt:</label>
+            <input type="file" id="file-input" name="file" accept=".txt" required>
+        </div>
+        <button type="submit">Загрузить и проиндексировать</button>
+    </form>
+    <div id="status"></div>
+    <p><a href="/">← На главную</a></p>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const statusDiv = document.getElementById('status');
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = '⏳ Загрузка и обработка...';
+            statusDiv.className = '';
+
+            try {
+                const response = await fetch('/upload/', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    statusDiv.textContent = '✅ ' + data.message;
+                    statusDiv.className = 'success';
+                } else {
+                    statusDiv.textContent = '❌ Ошибка: ' + (data.error || 'Неизвестная ошибка');
+                    statusDiv.className = 'error';
+                }
+            } catch (err) {
+                statusDiv.textContent = '❌ Ошибка сети: ' + err;
+                statusDiv.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html>

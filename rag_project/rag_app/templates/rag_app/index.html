@@ -14,11 +14,16 @@
 </head>
 <body>
     <h1>📚 RAG Ассистент</h1>
+
+    <p><a href="/upload-page/">Загрузить новый документ</a></p>
+
     <textarea id="question" rows="3" placeholder="Задайте вопрос по вашим учебным материалам..."></textarea>
     <br>
     <button id="ask-btn">Спросить</button>
     <div id="loading">⏳ Думаю...</div>
     <div id="answer"></div>
+
+
 
     <script>
         document.getElementById('ask-btn').addEventListener('click', function() {
