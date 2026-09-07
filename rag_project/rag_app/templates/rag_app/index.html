@@ -1,0 +1,50 @@
+<!-- rag_app/templates/rag_app/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>RAG Ассистент студента</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+        #question { width: 100%; padding: 10px; font-size: 16px; }
+        #ask-btn { padding: 10px 20px; font-size: 16px; }
+        #answer { margin-top: 20px; border: 1px solid #ccc; padding: 10px; min-height: 100px; white-space: pre-wrap; }
+        #loading { display: none; }
+    </style>
+</head>
+<body>
+    <h1>📚 RAG Ассистент</h1>
+    <textarea id="question" rows="3" placeholder="Задайте вопрос по вашим учебным материалам..."></textarea>
+    <br>
+    <button id="ask-btn">Спросить</button>
+    <div id="loading">⏳ Думаю...</div>
+    <div id="answer"></div>
+
+    <script>
+        document.getElementById('ask-btn').addEventListener('click', function() {
+            const question = document.getElementById('question').value.trim();
+            if (!question) return;
+            document.getElementById('answer').innerHTML = '';
+            document.getElementById('loading').style.display = 'block';
+            fetch('/ask/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                if (data.error) {
+                    document.getElementById('answer').innerHTML = '❌ ' + data.error;
+                } else {
+                    document.getElementById('answer').innerHTML = data.answer;
+                }
+            })
+            .catch(err => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('answer').innerHTML = '❌ Ошибка: ' + err;
+            });
+        });
+    </script>
+</body>
+</html>
