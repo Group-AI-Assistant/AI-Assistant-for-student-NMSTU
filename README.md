@@ -1,4 +1,4 @@
-## Пока я (Ильяс) выбрал так:
+**Пока я (Ильяс) выбрал так:**
 Основная LLM https://huggingface.co/RefalMachine/RuadaptQwen3-4B-Instruct-GGUF.
 Эмбеддинг LLM https://huggingface.co/cPilotGod/baai-bge-m3-568m-gguf.
 Обе в версиях Q4_K_M.
