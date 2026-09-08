@@ -1,5 +1,21 @@
+## Пока я (Ильяс) выбрал так:
+Основная LLM https://huggingface.co/RefalMachine/RuadaptQwen3-4B-Instruct-GGUF.
+Эмбеддинг LLM https://huggingface.co/cPilotGod/baai-bge-m3-568m-gguf.
+Обе в версиях Q4_K_M.
 
-Ильяс выбрал пока LLM https://huggingface.co/RefalMachine/RuadaptQwen3-4B-Instruct-GGUF
-С запуском через llama.cpp: winget install llama.cpp (Windows)
+Чтобы их запустить нужно скачать llama.cpp через командную строку: winget install llama.cpp (Windows).
 
-Во вкладке Contributing описано как добавлять файлы сюда.
+В качестве веб-интерфейса сейчас используется Django, потому что он пишется на Python, а Python - это хорошая среда для работы с LLM.
+
+Поэтому если захотите потестить, то надо: 
+1. Клонировать репозиторий себе на комп.
+2. Отдельно скачать две LLM по ссылкам выше.
+3. Установить llama.cpp.
+4. Настроить Django (посмотрите в интернете: запустить venv, скачать django, импортировать requirements).
+5. Открыть 3 терминала (командные строки).
+6. Ввести: llama-server -m my-model.gguf -c 4096 --host 0.0.0.0 --port 8080 (вместо my-model пишите название llm-файла, так две нейросети запускаете).
+7. В третьем терминале водим: django-admin startproject rag_project, находясь в корневой папке rag_project из скачанного репозитория.
+
+*Что-то в этой инструкции может не работать. Пишите, если не сработает.*
+
+**Во вкладке Contributing описано как добавлять файлы сюда.**
