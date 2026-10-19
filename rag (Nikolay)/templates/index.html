@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИИ-ассистент студента МГТУ им. Г. И. Носова</title>
+
+    <style>
+        :root {
+            --primary: #323c8d;
+            --primary-dark: #252d70;
+            --light: #f3f4fa;
+            --text: #20233a;
+            --muted: #73778b;
+            --border: #e3e5ee;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--light);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Верхняя панель */
+        .site-header {
+            min-height: 72px;
+            padding: 12px 5%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+        }
+
+        .brand-title {
+            font-size: 1.05rem;
+        }
+
+        .brand-subtitle {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button {
+            border: 0;
+            background: transparent;
+            color: white;
+            padding: 10px 12px;
+            border-radius: 7px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* Основная область */
+        main {
+            flex: 1;
+            width: 100%;
+            padding: 28px 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: min(75vh, 760px);
+            min-height: 450px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 8px 28px rgba(31, 38, 90, 0.09);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-heading {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .chat-heading h1 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .clear-btn {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .clear-btn:hover {
+            background: var(--light);
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafaff;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #e8eaff;
+            color: #202b79;
+            border-bottom-right-radius: 3px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-bottom-left-radius: 3px;
+        }
+
+        .loading {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .sources-block {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .source-item {
+            margin-top: 6px;
+            padding: 7px 9px;
+            border-radius: 6px;
+            background: var(--light);
+        }
+
+        .chat-input-area {
+            padding: 14px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #cfd2df;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(50, 60, 141, 0.12);
+        }
+
+        .send-btn {
+            border: 0;
+            background: var(--primary);
+            color: white;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        /* Подвал */
+        .site-footer {
+            padding: 16px 5%;
+            background: white;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Окна «О команде» и «Поддержка» */
+        dialog {
+            width: min(500px, calc(100% - 32px));
+            border: 0;
+            border-radius: 12px;
+            padding: 24px;
+            color: var(--text);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+        }
+
+        dialog::backdrop {
+            background: rgba(18, 22, 48, 0.5);
+        }
+
+        dialog h2 {
+            margin: 0 0 12px;
+            color: var(--primary);
+        }
+
+        dialog p {
+            line-height: 1.55;
+        }
+
+        .modal-close {
+            margin-top: 10px;
+            padding: 9px 15px;
+            border: 0;
+            border-radius: 7px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .site-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .site-nav {
+                width: 100%;
+            }
+
+            .nav-button {
+                padding-left: 0;
+                padding-right: 14px;
+            }
+
+            main {
+                padding: 12px 8px;
+            }
+
+            .chat-container {
+                height: 75vh;
+                min-height: 400px;
+            }
+
+            .message {
+                max-width: 92%;
+            }
+
+            .send-btn {
+                padding: 0 13px;
+            }
+        }
+		
+		.logo {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #323c8d;
+}
+		
+		
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="На главную">
+            <!-- Простой логотип в формате SVG, отдельный файл не нужен -->
+           <!--  <svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Логотип">
+                <rect x="2" y="2" width="44" height="44" rx="13" fill="white"/>
+                <path d="M14 30V18l10-5 10 5v12l-10 5-10-5Z"
+                      fill="none" stroke="#323c8d" stroke-width="2.5"/>
+                <circle cx="24" cy="24" r="4" fill="#323c8d"/>
+                <path d="M24 13v7M14 18l6 3M34 18l-6 3M14 30l6-3M34 30l-6-3M24 28v7"
+                      stroke="#323c8d" stroke-width="2"/>
+            </svg>-->
+			
+			<img
+    class="logo"
+    src="{{ url_for('static', filename='logo.png') }}"
+    alt="Логотип ИИ-ассистента"
+>
+	 
+            <span class="brand-title">
+                ИИ-ассистент МГТУ им. Г. И. Носова
+                <span class="brand-subtitle">mgtu@magtu.ru</span>
+            </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Главное меню">
+            <button class="nav-button" onclick="openDialog('aboutDialog')">
+                О команде
+            </button>
+            <button class="nav-button" onclick="openDialog('supportDialog')">
+                Поддержка
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="chat-container" aria-label="Чат с ИИ-ассистентом">
+            <div class="chat-heading">
+                <h1>Задайте вопрос ассистенту</h1>
+                <button class="clear-btn" id="clearButton" type="button">
+                    Очистить диалог
+                </button>
+            </div>
+
+            <div class="chat-box" id="chatBox" aria-live="polite">
+                <div class="message bot-message">
+                    Здравствуйте! Задайте вопрос по локальной базе знаний.
+                </div>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <input
+                    type="text"
+                    id="userInput"
+                    class="chat-input"
+                    placeholder="Введите ваш вопрос..."
+                    autocomplete="off"
+                    required
+                >
+                <button class="send-btn" id="sendButton" type="submit">
+                    Отправить
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>© 2026 ИИ-ассистент МГТУ им. Г. И. Носова</div>
+        <div>Локальная система поиска и ответов по базе знаний</div>
+    </footer>
+
+    <dialog id="aboutDialog">
+        <h2>О команде</h2>
+        <p>
+            Этот проект - локальный ИИ-ассистент на архитектуре RAG.
+            Он ищет информацию в подготовленной базе знаний и формирует ответ
+            с помощью языковой модели.
+        </p>
+        <p>
+            <b>Команда проекта (группа АПИм-25): </b> <br>
+			<em>Никишов Николай <br>
+			Жунусов Ильяc <br>
+			Голиков Егор <br>
+			Гмызин Андрей <br>
+			Сорокина Анна  <br>
+			</em>
+			 <b>Руководитель: Карманова Екатерина Владимировна</b>
+	
+        </p>
+        <button class="modal-close" onclick="closeDialog('aboutDialog')">
+            Закрыть
+        </button>
+    </dialog>
+
+    <dialog id="supportDialog">
+        <h2>Поддержка</h2>
+        <p>
+            Если возникла проблема, укажите её описание и приложите снимок
+            экрана с сообщением об ошибке.
+        </p>
+        <p>
+            Контакт: <a href="#">
+               nikishovnikolai@mail.ru
+            </a>
+        </p>
+       
+        <button class="modal-close" onclick="closeDialog('supportDialog')">
+            Закрыть
+        </button>
+    </dialog>
+
+    <script>
+        const chatBox = document.getElementById("chatBox");
+        const chatForm = document.getElementById("chatForm");
+        const userInput = document.getElementById("userInput");
+        const sendButton = document.getElementById("sendButton");
+
+        function addMessage(text, className) {
+            const element = document.createElement("div");
+            element.className = `message ${className}`;
+            // textContent отображает текст безопасно, не исполняя HTML из ответа
+            element.textContent = text;
+            chatBox.appendChild(element);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return element;
+        }
+
+        chatForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const query = userInput.value.trim();
+            if (!query) return;
+
+            addMessage(query, "user-message");
+            userInput.value = "";
+            sendButton.disabled = true;
+
+            const loading = addMessage(
+                "Ищу ответ в базе знаний...",
+                "bot-message loading"
+            );
+
+            try {
+                const response = await fetch("/api/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                loading.remove();
+
+                if (!response.ok) {
+                    addMessage(data.error || "Сервер не смог обработать запрос.", "bot-message");
+                    return;
+                }
+
+                const answerElement = addMessage(
+                    data.answer || "Сервер вернул пустой ответ.",
+                    "bot-message"
+                );
+				
+				
+				
+             /*     Список фрагментов
+                if (Array.isArray(data.sources) && data.sources.length > 0) {
+                    const sourcesBlock = document.createElement("div");
+                    sourcesBlock.className = "sources-block";
+
+                    const title = document.createElement("strong");
+                    title.textContent = "Использованные фрагменты:";
+                    sourcesBlock.appendChild(title);
+
+                    data.sources.forEach((source, index) => {
+                        const item = document.createElement("div");
+                        item.className = "source-item";
+                        item.textContent = `[${index + 1}] ${source}`;
+                        sourcesBlock.appendChild(item);
+                    });
+
+                    answerElement.appendChild(sourcesBlock);
+                }
+				*/			
+				
+            } catch (error) {
+                loading.remove();
+                addMessage(
+                    "Не удалось связаться с сервером. Проверьте, что app.py запущен.",
+                    "bot-message"
+                );
+                console.error(error);
+            } finally {
+                sendButton.disabled = false;
+                userInput.focus();
+            }
+        });
+
+        document.getElementById("clearButton").addEventListener("click", async () => {
+            try {
+                const response = await fetch("/api/clear", { method: "POST" });
+                if (!response.ok) throw new Error("Ошибка очистки");
+
+                chatBox.replaceChildren();
+                addMessage("Память очищена! Начните новый диалог.", "bot-message");
+            } catch (error) {
+                addMessage("Не удалось очистить диалог. Проверьте соединение с сервером.", "bot-message");
+                console.error(error);
+            }
+        });
+
+        function openDialog(id) {
+            document.getElementById(id).showModal();
+        }
+
+        function closeDialog(id) {
+            document.getElementById(id).close();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+C:\Users\REDMI\.ollama\models    (в ней модели)
+
+
+ollama pull nomic-embed-text    (скачал командой эту модель эмбэдинга nomic-embed-text)   ----- Заменил на FastEmbed   (Лезла ошибка 503)
+
+ollama pull qwen2.5:1.5b        (скачал  командой эту LMM  qwen2.5:1.5b)
+
+
+
+pip install chromadb ollama     устанавливает в ваше Python-окружение две отдельные библиотеки: ChromaDB (для работы с векторными базами данных) и Ollama (для взаимодействия с локальными языковыми моделями)
+
+
+C:\Users\REDMI\AppData\Local\Programs\Python\Python314\Lib\site-packages  (где будут установлены)
+
+
+
+
