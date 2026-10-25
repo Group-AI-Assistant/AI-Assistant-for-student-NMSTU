@@ -16,12 +16,12 @@ from google.colab import files # библиотка для скачивания 
 import emoji # библиотека для работы с эмодзи
 import re # библиотека для регулярных выражений
 import zipfile # библиотека для упаковки файлов в архив
-ACCESS_TOKEN = "63cbfa7863cbfa7863cbfa78cd608fd569663cb63cbfa7809754abee24b2edd2378a7e1" #Сервисный токен доступа
+ACCESS_TOKEN = "20b6d76120b6d76120b6d7611d23f2f870020b620b6d7614a6b127983879e699a0e8d6f" #Сервисный токен доступа
 VK_GROUPS = ['https://vk.ru/nmstu',
-            'https://vk.ru/pkmagtu',
-            'https://vk.ru/pravokatormstu',
-            'https://vk.ru/cathbiit',
-            'https://vk.ru/ieias_mgtu',
+             'https://vk.ru/pkmagtu',
+             #'https://vk.ru/pravokatormstu',
+             'https://vk.ru/cathbiit',
+             'https://vk.ru/ieias_mgtu',
              'https://vk.ru/metallmagtu',
              'https://vk.ru/instgdit',
              'https://vk.ru/isaii_mgtu',
@@ -30,7 +30,8 @@ VK_GROUPS = ['https://vk.ru/nmstu',
              'https://vk.ru/ippsr.magtu',
              'https://vk.ru/standartisation',
              'https://vk.ru/ffkism',
-             'https://vk.ru/nmstu_dpo']  # Сообщества ВК
+             'https://vk.ru/nmstu_dpo'
+             ]  # Сообщества ВК
 API_VERSION = "5.199" #Выбираем последнюю версию апи-вк
 
 def get_user_date(prompt):
@@ -93,7 +94,7 @@ def get_posts_by_this_year(group_id):
             if start_date <= post_date <= end_date:
               if post.get('text'):
                 all_posts.append(post)
-            else:
+            elif post_date < start_date:
                 checker = True
 
         offset += count
