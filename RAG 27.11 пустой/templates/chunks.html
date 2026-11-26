@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний</title>
+
+    <style>
+        :root {
+            --primary: #323c8d;
+            --primary-dark: #252d70;
+            --light: #f3f4fa;
+            --text: #20233a;
+            --muted: #73778b;
+            --border: #e3e5ee;
+            --danger: #a32121;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--light);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+  .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+        }
+
+        .brand-title {
+            font-size: 1.05rem;
+        }
+
+        .brand-subtitle {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button {
+            border: 0;
+            background: transparent;
+            color: white;
+            padding: 10px 12px;
+            border-radius: 7px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+
+
+
+
+/* Подвал */
+        .site-footer {
+            padding: 16px 5%;
+            background: white;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .site-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+      
+
+        header h1 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        input,
+        select,
+        button {
+            min-height: 40px;
+            padding: 8px 10px;
+            border: 1px solid #cfd2df;
+            border-radius: 7px;
+            font-size: .95rem;
+        }
+
+        button {
+            border: 0;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: wait;
+        }
+
+        .danger {
+            background: var(--danger);
+        }
+
+        .danger:hover {
+            background: #7c1818;
+        }
+
+        .upload-row,
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .upload-row input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .filters input {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .filters select {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .hint,
+        .stats {
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        .status {
+            margin-top: 12px;
+            white-space: pre-wrap;
+        }
+
+        .chunk {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .chunk-header {
+            background: #fafaff;
+            padding: 10px 13px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .chunk-text {
+            padding: 14px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.5;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 5px;
+            background: #e8eaff;
+            color: var(--primary);
+            font-size: .83rem;
+        }
+
+        .empty,
+        .error {
+            padding: 22px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .error {
+            color: var(--danger);
+        }
+
+        .pagination {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .upload-row,
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .upload-row input,
+            .filters input,
+            .filters select {
+                width: 100%;
+            }
+        }
+		
+			.logo {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #323c8d;
+}
+    </style>
+</head>
+
+<body>
+<header class="site-header">
+        <a class="brand" href="/" aria-label="На главную">
+            <!-- Простой логотип в формате SVG, отдельный файл не нужен -->
+           <!--  <svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Логотип">
+                <rect x="2" y="2" width="44" height="44" rx="13" fill="white"/>
+                <path d="M14 30V18l10-5 10 5v12l-10 5-10-5Z"
+                      fill="none" stroke="#323c8d" stroke-width="2.5"/>
+                <circle cx="24" cy="24" r="4" fill="#323c8d"/>
+                <path d="M24 13v7M14 18l6 3M34 18l-6 3M14 30l6-3M34 30l-6-3M24 28v7"
+                      stroke="#323c8d" stroke-width="2"/>
+            </svg>-->
+			
+			<img
+    class="logo"
+    src="{{ url_for('static', filename='logo.png') }}"
+    alt="Логотип ИИ-ассистента"
+>
+	 
+            <span class="brand-title">
+                ИИ-ассистент МГТУ им. Г. И. Носова
+                <span class="brand-subtitle">mgtu@magtu.ru</span>
+            </span>
+        </a>
+		
+		
+
+        <nav class="site-nav" aria-label="Главное меню">
+            <button class="nav-button" onclick="openDialog('aboutDialog')">
+                О команде
+            </button>
+            <button class="nav-button" onclick="openDialog('supportDialog')">
+                Поддержка
+            </button>
+			<a class="nav-button" href="/chunks">База знаний</a>
+			<a class="nav-button" href="/benchmark">Бенчмарк</a>
+        </nav>
+    </header>
+
+<main>
+    <section class="panel">
+        <h2>Загрузка файлов</h2>
+
+        <p class="hint">
+            Можно выбрать несколько TXT-файлов одновременно.
+        </p>
+
+        <div class="upload-row">
+            <input
+                id="fileInput"
+                type="file"
+                accept=".txt,text/plain"
+                multiple
+            >
+
+            <button id="fixedButton">
+                Загрузить способом 1
+            </button>
+
+            <button id="paragraphButton">
+                Загрузить способом 2
+            </button>
+
+            <button id="clearButton" class="danger">
+                Очистить всю базу
+            </button>
+        </div>
+
+        <p class="hint">
+            Способ 1: 400 символов с перекрытием 80 символов.
+            Способ 2: С указателям (два раза "Enter").
+        </p>
+
+        <div id="uploadStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+        <div class="filters">
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Поиск по тексту чанков..."
+            >
+
+            <select id="strategyFilter">
+                <option value="">Все способы загрузки</option>
+                <option value="fixed_window">
+                    Способ 1 — Посимвольный с перекрытием
+                </option>
+                <option value="paragraphs">
+                    Способ 2 — С указателям (два раза "Enter")
+                </option>
+            </select>
+
+            <select id="sourceFilter">
+                <option value="">Все файлы</option>
+            </select>
+
+            <button id="searchButton">
+                Найти
+            </button>
+        </div>
+
+        <p class="hint">
+            Если поле поиска пустое, выводятся все чанки с учётом фильтров.
+        </p>
+
+        <div id="stats" class="stats">
+            Загрузка чанков...
+        </div>
+
+        <div id="results"></div>
+        <div id="pagination" class="pagination"></div>
+    </section>
+</main>
+
+  <footer class="site-footer">
+        <div>© 2026 ИИ-ассистент МГТУ им. Г. И. Носова</div>
+        <div>Локальная система поиска и ответов по базе знаний</div>
+    </footer>
+
+    <dialog id="aboutDialog">
+        <h2>О команде</h2>
+        <p>
+            Этот проект - локальный ИИ-ассистент на архитектуре RAG.
+            Он ищет информацию в подготовленной базе знаний и формирует ответ
+            с помощью языковой модели.
+        </p>
+        <p>
+            <b>Команда проекта (группа АПИм-25): </b> <br>
+			<em>Никишов Николай <br>
+			Жунусов Ильяc <br>
+			Голиков Егор <br>
+			Гмызин Андрей <br>
+			Сорокина Анна  <br>
+			</em>
+			 <b>Руководитель: Карманова Екатерина Владимировна</b>
+	
+        </p>
+        <button class="modal-close" onclick="closeDialog('aboutDialog')">
+            Закрыть
+        </button>
+    </dialog>
+
+    <dialog id="supportDialog">
+        <h2>Поддержка</h2>
+        <p>
+            Если возникла проблема, укажите её описание и приложите снимок
+            экрана с сообщением об ошибке.
+        </p>
+        <p>
+            Контакт: <a href="#">
+               nikishovnikolai@mail.ru
+            </a>
+        </p>
+       
+        <button class="modal-close" onclick="closeDialog('supportDialog')">
+            Закрыть
+        </button>
+    </dialog>
+
+
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const uploadStatus = document.getElementById("uploadStatus");
+
+    const searchInput = document.getElementById("searchInput");
+    const strategyFilter = document.getElementById("strategyFilter");
+    const sourceFilter = document.getElementById("sourceFilter");
+
+    const stats = document.getElementById("stats");
+    const results = document.getElementById("results");
+    const pagination = document.getElementById("pagination");
+
+    function strategyName(value) {
+        if (value === "fixed_window") {
+            return "Способ 1 —  посимвольный с перекрытием";
+        }
+
+        if (value === "paragraphs") {
+            return "Способ 2 — по указателю (два раза Enter)";
+        }
+
+        return "Не указано";
+    }
+
+    function showItems(items) {
+        results.replaceChildren();
+
+        if (!items || items.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = "Чанки не найдены.";
+            results.appendChild(empty);
+            return;
+        }
+
+        for (const item of items) {
+            const card = document.createElement("article");
+            card.className = "chunk";
+
+            const heading = document.createElement("div");
+            heading.className = "chunk-header";
+
+            const source = document.createElement("strong");
+            source.textContent =
+                `${item.source} · чанк ${item.chunk_index}`;
+
+            const strategy = document.createElement("span");
+            strategy.className = "badge";
+            strategy.textContent = strategyName(item.strategy);
+
+            heading.appendChild(source);
+            heading.appendChild(strategy);
+
+            const text = document.createElement("div");
+            text.className = "chunk-text";
+            text.textContent = item.text || "";
+
+            card.appendChild(heading);
+            card.appendChild(text);
+            results.appendChild(card);
+        }
+    }
+
+    async function loadSources() {
+        const response = await fetch("/api/chunks/sources");
+        const data = await response.json();
+
+        sourceFilter.replaceChildren();
+
+        const all = document.createElement("option");
+        all.value = "";
+        all.textContent = "Все файлы";
+        sourceFilter.appendChild(all);
+
+        for (const source of data.sources || []) {
+            const option = document.createElement("option");
+            option.value = source;
+            option.textContent = source;
+            sourceFilter.appendChild(option);
+        }
+    }
+
+    async function loadChunks(page = 1) {
+        stats.textContent = "Загрузка...";
+        pagination.replaceChildren();
+
+        const params = new URLSearchParams({
+            search: searchInput.value.trim(),
+            strategy: strategyFilter.value,
+            source: sourceFilter.value,
+            page: String(page),
+            per_page: "20",
+        });
+
+        try {
+            const response = await fetch(`/api/chunks?${params}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Ошибка загрузки.");
+            }
+
+            stats.textContent = `Найдено чанков: ${data.total}`;
+            showItems(data.items);
+
+            if (data.page > 1) {
+                const previous = document.createElement("button");
+                previous.textContent = "← Назад";
+                previous.onclick = () => loadChunks(data.page - 1);
+                pagination.appendChild(previous);
+            }
+
+            const pageInfo = document.createElement("span");
+            pageInfo.className = "hint";
+            pageInfo.textContent =
+                `Страница ${data.page} из ${data.pages || 1}`;
+            pagination.appendChild(pageInfo);
+
+            if (data.page < data.pages) {
+                const next = document.createElement("button");
+                next.textContent = "Вперёд →";
+                next.onclick = () => loadChunks(data.page + 1);
+                pagination.appendChild(next);
+            }
+
+        } catch (error) {
+            stats.textContent = "Ошибка загрузки.";
+            results.replaceChildren();
+
+            const message = document.createElement("div");
+            message.className = "error";
+            message.textContent = error.message;
+            results.appendChild(message);
+        }
+    }
+
+    async function uploadByStrategy(strategy) {
+        const files = Array.from(fileInput.files || []);
+
+        if (files.length === 0) {
+            uploadStatus.textContent =
+                "Сначала выберите один или несколько TXT-файлов.";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("strategy", strategy);
+
+        for (const file of files) {
+            formData.append("files", file);
+        }
+
+        const buttons = [
+            document.getElementById("fixedButton"),
+            document.getElementById("paragraphButton"),
+            document.getElementById("clearButton"),
+        ];
+
+        buttons.forEach(button => {
+            button.disabled = true;
+        });
+
+        uploadStatus.textContent = "Обработка файлов...";
+
+        try {
+            const response = await fetch("/api/chunks/ingest", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Ошибка обработки файлов.");
+            }
+
+            const loaded = (data.files || [])
+                .map(item => `${item.filename}: ${item.chunks}`)
+                .join("; ");
+
+            const errors = (data.errors || []).join(" ");
+
+            uploadStatus.textContent =
+                `Готово. Добавлено чанков: ${data.total_chunks}. ` +
+                (loaded ? `Файлы: ${loaded}. ` : "") +
+                errors;
+
+            fileInput.value = "";
+
+            await loadSources();
+            await loadChunks();
+
+        } catch (error) {
+            uploadStatus.textContent =
+                `Ошибка загрузки: ${error.message}`;
+        } finally {
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+        }
+    }
+
+    async function clearDatabase() {
+        const confirmed = confirm(
+            "Удалить все чанки из базы? Это действие нельзя отменить."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const button = document.getElementById("clearButton");
+        button.disabled = true;
+        uploadStatus.textContent = "Очистка базы...";
+
+        try {
+            const response = await fetch(
+                "/api/chunks/clear",
+                { method: "POST" }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Ошибка очистки базы.");
+            }
+
+            uploadStatus.textContent =
+                `База очищена. Удалено чанков: ${data.deleted}.`;
+
+            await loadSources();
+            await loadChunks();
+
+        } catch (error) {
+            uploadStatus.textContent =
+                `Ошибка очистки: ${error.message}`;
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    document.getElementById("fixedButton").onclick = () => {
+        uploadByStrategy("fixed_window");
+    };
+
+    document.getElementById("paragraphButton").onclick = () => {
+        uploadByStrategy("paragraphs");
+    };
+
+    document.getElementById("clearButton").onclick = clearDatabase;
+
+    document.getElementById("searchButton").onclick = () => {
+        loadChunks(1);
+    };
+
+    searchInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            loadChunks(1);
+        }
+    });
+
+    strategyFilter.addEventListener("change", () => {
+        loadChunks(1);
+    });
+
+    sourceFilter.addEventListener("change", () => {
+        loadChunks(1);
+    });
+
+    async function start() {
+        await loadSources();
+        await loadChunks();
+    }
+
+    start();
+</script>
+</body>
+</html>
